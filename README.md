@@ -1,16 +1,16 @@
-# get.cyrup.ai
-
-One-line installer for Cyrup AI tools.
-
-## Install
+# Install Cyrup AI
 
 ```bash
 curl -fsSL https://get.cyrup.ai/bootstrap.sh | bash
 ```
 
-That's it! This will automatically:
-1. Install Rust (nightly toolchain) if needed
-2. Install all required system dependencies
-3. Set up your development environment
+That's it! One line, no options, no configuration needed.
 
-For more information, visit [docs.cyrup.ai](https://docs.cyrup.ai)
+Works on:
+- Ubuntu/Debian
+- Amazon Linux
+- macOS
+
+Automatic GPU detection included.
+
+Docs: [get.cyrup.ai](https://get.cyrup.ai)
