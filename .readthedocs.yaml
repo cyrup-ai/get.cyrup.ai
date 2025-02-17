@@ -1,0 +1,14 @@
+version: 2
+
+build:
+  os: ubuntu-22.04
+  tools:
+    rust: "1.75"
+  commands:
+    - curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.36/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+    - mv mdbook /usr/local/bin/
+    - mdbook build
+
+# Build documentation in the docs/ directory with mdBook
+mdbook:
+  configuration: book.toml
