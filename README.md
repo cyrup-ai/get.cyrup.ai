@@ -1,16 +1,16 @@
 # get.cyrup.ai
 
-Installation and setup scripts for Cyrup AI tools.
+One-line installer for Cyrup AI tools.
 
-## Quick Start
+## Install
 
 ```bash
 curl -fsSL https://get.cyrup.ai/bootstrap.sh | bash
 ```
 
-This will install the minimal requirements needed to run Cyrup tools, including:
-- Rust (nightly toolchain)
+That's it! This will automatically:
+1. Install Rust (nightly toolchain) if needed
+2. Install all required system dependencies
+3. Set up your development environment
 
-## Advanced Installation
-
-For more advanced installation options and documentation, visit [docs.cyrup.ai](https://docs.cyrup.ai)
+For more information, visit [docs.cyrup.ai](https://docs.cyrup.ai)

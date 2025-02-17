@@ -1,21 +1,18 @@
 #!/bin/bash
 set -e
 
-echo "Cyrup Bootstrap"
-echo "Installing minimal requirements for cyrup-install..."
+echo "🚀 Welcome to Cyrup AI"
 
-# Install Rust if not present
+# Install Rust nightly
 if ! command -v rustup &> /dev/null; then
-    echo "Installing Rust..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
     source "$HOME/.cargo/env"
 fi
 
-# Ensure we're on nightly
-if ! rustup show active-toolchain | grep -q "nightly"; then
-    echo "Switching to nightly toolchain..."
-    rustup default nightly
-    rustup update
-fi
+# Ensure nightly
+rustup default nightly
+rustup update
 
-echo -e "\nRust installation complete. You can now proceed with cyrup-install."
+# Run installer
+cargo install --git https://github.com/cyrup-ai/get.cyrup.ai.git
+cyrup-install
