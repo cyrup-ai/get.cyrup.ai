@@ -1,0 +1,14 @@
+[package]
+name = "cyrup-install"
+version = "0.1.0"
+edition = "2021"
+description = "Installer for Cyrup AI tools"
+authors = ["Cyrup Engineering <eng@cyrup.ai>"]
+license = "MIT"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+anyhow = "1.0"
+tokio = { version = "1.36", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
