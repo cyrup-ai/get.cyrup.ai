@@ -1,0 +1,11 @@
+[book]
+authors = ["Cyrup Engineering"]
+language = "en"
+multilingual = false
+src = "docs"
+title = "Cyrup AI Installation Guide"
+
+[output.html]
+git-repository-url = "https://github.com/cyrup-ai/get.cyrup.ai"
+edit-url-template = "https://github.com/cyrup-ai/get.cyrup.ai/edit/main/{path}"
+site-url = "/get.cyrup.ai/"
