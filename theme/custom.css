@@ -1,8 +1,11 @@
 .hljs {
-    background-image: linear-gradient(135deg, #1a1b26 25%, #24283b 25%, #24283b 50%, #1a1b26 50%, #1a1b26 75%, #24283b 75%, #24283b 100%);
-    background-size: 20px 20px;
-    border-radius: 8px;
-    padding: 1.5em !important;
-    margin: 1em 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: url('../assets/background/cyrup_crystal_ball.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+    padding: 2em !important;
+    margin: 1.5em 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    position: relative;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
