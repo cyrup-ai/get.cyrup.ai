@@ -13,6 +13,16 @@ fi
 rustup default nightly
 rustup update
 
-# Run installer
-cargo install --git https://github.com/cyrup-ai/get.cyrup.ai.git
-cyrup-install
+# Create cyrup directory
+mkdir -p "$HOME/cyrup"
+cd "$HOME/cyrup"
+
+# Clone repositories
+git clone https://github.com/cyrup-ai/secretrust.git secret
+git clone https://github.com/cyrup-ai/cyrup.git .
+git clone https://github.com/cyrup-ai/get.cyrup.ai.git sys
+
+# Build and install
+cd sys
+cargo install --path .
+cyrup-sys
