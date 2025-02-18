@@ -1,16 +1,15 @@
 # Install Cyrup AI
 
+## `cyrup` bootstrap
+
 ```bash
 curl -fsSL https://get.cyrup.ai/bootstrap.sh | bash
 ```
 
-That's it! One line, no options, no configuration needed.
+Current Support for:
 
-Works on:
 - Ubuntu/Debian
 - Amazon Linux
 - macOS
 
-Automatic GPU detection included.
-
-Docs: [get.cyrup.ai](https://get.cyrup.ai)
+cli docs: [docs.cyrup.ai](https://docs.cyrup.ai)
