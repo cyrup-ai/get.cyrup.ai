@@ -1,0 +1,11 @@
+.hljs {
+    background: url('../assets/background/cyrup_crystal_ball.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+    padding: 2em !important;
+    margin: 1.5em 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    position: relative;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
