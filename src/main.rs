@@ -1,22 +1,10 @@
-#!/usr/bin/env -S cargo +nightly -Zscript
-//! ```cargo
-//! [dependencies]
-//! anyhow = "1"
-//! which = "4"
-//! serde = { version = "1.0", features = ["derive"] }
-//! dirs = "5"
-//! tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-//! tracing = "0.1"
-//! axum = "0.6"
-//! tracing-subscriber = "0.3"
-//! whoami = "1.4"
-//! ```
+use anyhow::Result;
 
-use anyhow::{anyhow, Context, Result};
-use std::{env, fs, process::Command, process::Output};
-use which::which;
-use dirs::home_dir;
-use std::time::{SystemTime, UNIX_EPOCH, Duration};
+#[tokio::main]
+async fn main() -> Result<()> {
+    println!("🚀 Cyrup System Setup");
+    crate::setup::run_installer().await
+}
 
 // ============================================================================
 // Configuration Constants

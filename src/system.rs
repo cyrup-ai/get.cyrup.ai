@@ -1,6 +1,78 @@
 use anyhow::{anyhow, Result};
-use std::process::Command;
+use std::{process::Command, path::PathBuf};
 use which::which;
+use dirs::home_dir;
+use std::time::{SystemTime, UNIX_EPOCH, Duration};
+use std::fs;
+
+pub const RETRY_ATTEMPTS: u32 = 3;
+pub const CACHE_DURATION_SECS: u64 = 24 * 60 * 60; // 24 hours
+
+pub struct PackageCache {
+    cache_dir: PathBuf,
+}
+
+impl PackageCache {
+    pub fn new() -> Result<Self> {
+        let cache_dir = home_dir()
+            .ok_or_else(|| anyhow!("Cannot determine home directory"))?
+            .join(".cache/cypackages");
+        fs::create_dir_all(&cache_dir)?;
+        Ok(Self { cache_dir })
+    }
+
+    pub fn get_cache_path(&self, os: &str, package: &str) -> PathBuf {
+        self.cache_dir.join(format!("{}_{}}", os, package))
+    }
+
+    pub fn is_fresh(&self, os: &str, package: &str) -> bool {
+        let cache_path = self.get_cache_path(os, package);
+        if let Ok(metadata) = fs::metadata(cache_path) {
+            if let Ok(modified) = metadata.modified() {
+                if let Ok(duration) = modified.duration_since(UNIX_EPOCH) {
+                    let now = SystemTime::now()
+                        .duration_since(UNIX_EPOCH)
+                        .unwrap_or(duration);
+                    return now.as_secs() - duration.as_secs() < CACHE_DURATION_SECS;
+                }
+            }
+        }
+        false
+    }
+
+    pub fn update(&self, os: &str, package: &str) -> Result<()> {
+        let cache_path = self.get_cache_path(os, package);
+        fs::write(cache_path, SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs()
+            .to_string())?;
+        Ok(())
+    }
+}
+
+pub fn retry_with_backoff<F, T>(mut f: F, retries: u32) -> Result<T>
+where
+    F: FnMut() -> Result<T>,
+{
+    let mut attempts = 0;
+    let mut last_error = None;
+
+    while attempts < retries {
+        match f() {
+            Ok(result) => return Ok(result),
+            Err(e) => {
+                last_error = Some(e);
+                attempts += 1;
+                if attempts < retries {
+                    let delay = std::time::Duration::from_secs(2u64.pow(attempts));
+                    std::thread::sleep(delay);
+                }
+            }
+        }
+    }
+    Err(last_error.unwrap_or_else(|| anyhow!("Retry failed")))
+}
 
 pub fn ensure_sudo_access() -> Result<()> {
     if whoami::username() == "root" {
