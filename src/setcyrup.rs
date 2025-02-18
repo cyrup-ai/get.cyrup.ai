@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result, Context};
-use crate::config::Config;
-use crate::system::{self, PackageCache, RETRY_ATTEMPTS};
+use crate::secretrust::Config;
+use crate::sys::{self, PackageCache, RETRY_ATTEMPTS};
 use std::fs;
 use dirs::home_dir;
 

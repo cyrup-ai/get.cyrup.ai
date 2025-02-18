@@ -3,7 +3,7 @@ use anyhow::Result;
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("🚀 Cyrup System Setup");
-    crate::setup::run_installer().await
+    crate::setcyrup::run_installer().await
 }
 
 // ============================================================================

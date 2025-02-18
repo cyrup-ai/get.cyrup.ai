@@ -1,5 +1,6 @@
-mod config;
-mod setup;
+mod secretrust;
+mod sys;
+mod setcyrup;
 
-pub use config::Config;
-pub use setup::collect_env;
+pub use secretrust::Config;
+pub use setcyrup::collect_env;
