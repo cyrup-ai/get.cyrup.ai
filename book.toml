@@ -1,14 +1,14 @@
 [book]
-authors = ["Cyrup Engineering"]
+authors = ["Dev Team<devteam@cyrup.ai>"]
 language = "en"
 multilingual = false
 src = "docs"
-title = "Cyrup AI Installation Guide"
+title = "cyrup bootstrap: `setcyrup`"
 
 [output.html]
 git-repository-url = "https://github.com/cyrup-ai/get.cyrup.ai"
 edit-url-template = "https://github.com/cyrup-ai/get.cyrup.ai/edit/main/{path}"
-site-url = "/get.cyrup.ai/"
+site-url = "https://get.cyrup.ai"
 additional-css = ["theme/custom.css"]
 default-theme = "navy"
 prefer-dark-theme = true

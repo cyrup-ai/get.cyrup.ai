@@ -1,7 +1,7 @@
 # Install Cyrup AI
 
 ```bash
-curl -fsSL https://get.cyrup.ai/bootstrap.sh | bash
+curl -fsSL https://get.cyrup.ai/assets/bootstrap.sh | bash
 ```
 
 That's it! One line, no options, no configuration needed.
