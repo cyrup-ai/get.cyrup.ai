@@ -1,4 +1,8 @@
-# Install Cyrup AI
+# Introduction
+
+Cyrup AI is a powerful AI system that can be installed with a single command.
+
+## Installation
 
 ```bash
 curl -fsSL https://get.cyrup.ai/assets/bootstrap.sh | bash
@@ -11,4 +15,11 @@ Works on:
 - Amazon Linux
 - macOS
 
-Automatic GPU detection included.
+## What It Does
+
+The bootstrap script will:
+1. Install Rust nightly if not present
+2. Create necessary directories
+3. Clone required repositories
+4. Build and install the system
+5. Automatically detect and configure GPU support
