@@ -1,0 +1,236 @@
+[env]
+TERM = "xterm-256color"
+
+shell = "$HOME/.cargo/bin/nu"
+
+[window]
+decorations = "Transparent"
+dynamic_title = true
+opacity = 0.85
+option_as_alt = "Both"
+decorations_theme_variant = "Dark"
+
+[window.padding]
+x = 10
+y = 30
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
+
+[window.position]
+x = 0
+y = 0
+
+[window.dimensions]
+columns = 80
+lines = 24
+
+[scrolling]
+history = 10_000
+multiplier = 3
+
+[font]
+size = 18
+normal = { family = "FiraCode Nerd Font Mono", style = "Retina" }
+bold = { family = "FiraCode Nerd Font Mono", style = "Bold" }
+italic = { family = "FiraCode Nerd Font Mono", style = "Italic" }
+bold_italic = { family = "FiraCode Nerd Font Mono", style = "Bold Italic" }
+
+[font.offset]
+y = 12
+x = 0
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[colors.primary]
+background = "#1B162A"
+foreground = "#FFFFFF"
+
+[colors.cursor]
+text = "CellBackground"          # &Background
+cursor = "#9F70A9"               # &Comment
+
+[colors.vi_mode_cursor]
+text = "CellBackground"          # &Background
+cursor = "CellForeground"        # &Foreground
+
+[colors.search.matches]
+foreground = "#544158"           # &Selection
+background = "#8AFF80"           # &AnsiColor2
+
+[colors.search.focused_match]
+foreground = "#544158"           # &Selection
+background = "#FFCA80"           # &Orange
+
+[colors.hints.start]
+foreground = "#2A212C"           # &Background
+background = "#FFFF80"           # &AnsiColor3
+
+[colors.hints.end]
+foreground = "#FFFF80"           # &AnsiColor3
+background = "#2A212C"           # &Background
+
+[colors.line_indicator]
+foreground = "None"
+background = "None"
+
+[colors.footer_bar]
+foreground = "#2A212C"           # &Background
+background = "#9F70A9"           # &Comment
+
+[colors.selection]
+text = "CellForeground"          # &Foreground
+background = "#544158"           # &Selection
+
+[colors.normal]
+black = "#2A212C"                # &AnsiColor0
+red = "#FF9580"                  # &AnsiColor1
+green = "#8AFF80"                # &AnsiColor2
+yellow = "#FFFF80"               # &AnsiColor3
+blue = "#9580FF"                 # &AnsiColor4
+magenta = "#FF80BF"              # &AnsiColor5
+cyan = "#80FFEA"                 # &AnsiColor6
+white = "#F8F8F2"                # &AnsiColor7
+
+[colors.bright]
+black = "#624C67"                # &AnsiColor8
+red = "#FFAA99"                  # &AnsiColor9
+green = "#A2FF99"                # &AnsiColor10
+yellow = "#FFFF99"               # &AnsiColor11
+blue = "#AA99FF"                 # &AnsiColor12
+magenta = "#FF99CC"              # &AnsiColor13
+cyan = "#99FFEE"                 # &AnsiColor14
+white = "#FFFFFF"                # &AnsiColor15
+
+[colors.dim]
+black = "#221A23"                # &AnsiColor20
+red = "#CC7766"                  # &AnsiColor21
+green = "#6ECC66"                # &AnsiColor22
+yellow = "#CCCC66"               # &AnsiColor23
+blue = "#7766CC"                 # &AnsiColor24
+magenta = "#CC6699"              # &AnsiColor25
+cyan = "#66CCBB"                 # &AnsiColor26
+white = "#C6C6C2"                # &AnsiColor27
+
+[[colors.indexed_colors]]
+index = 16
+color = "#FFCA80"                # &Orange
+
+[[colors.indexed_colors]]
+index = 17
+color = "#E67070"                # &FunctionalRed
+
+
+[bell]
+animation = "EaseOutExpo"
+duration = 0
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+save_to_clipboard = true
+
+[cursor]
+blink_interval = 750
+unfocused_hollow = true
+
+[cursor.style]
+shape = "Block"
+blinking = "On"
+
+[cursor.vi_mode_style]
+shape = "Block"
+blinking = "On"
+
+[mouse]
+hide_when_typing = true
+
+[hints]
+alphabet = "jfkdls;ahgurieowpq"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "Insert"
+mods = "Shift"
+action = "PasteSelection"
+
+[[keyboard.bindings]]
+key = "Key0"
+mods = "Control"
+action = "ResetFontSize"
+
+[[keyboard.bindings]]
+key = "Equals"
+mods = "Control"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Minus"
+mods = "Control"
+action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "F11"
+mods = "None"
+action = "ToggleFullscreen"
+
+[[keyboard.bindings]]
+key = "Paste"
+mods = "None"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "Copy"
+mods = "None"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control"
+action = "ClearLogNotice"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control"
+chars = "\\x0c"
+
+[[keyboard.bindings]]
+key = "PageUp"
+mods = "None"
+action = "ScrollPageUp"
+mode = "~Alt"
+
+[[keyboard.bindings]]
+key = "PageDown"
+mods = "None"
+action = "ScrollPageDown"
+mode = "~Alt"
+
+[[keyboard.bindings]]
+key = "Home"
+mods = "Shift"
+action = "ScrollToTop"
+mode = "~Alt"
+
+[[keyboard.bindings]]
+key = "End"
+mods = "Shift"
+action = "ScrollToBottom"
+mode = "~Alt"
+
+[debug]
+render_timer = false
+persistent_logging = false
+log_level = "Warn"
+print_events = false

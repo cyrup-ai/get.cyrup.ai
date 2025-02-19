@@ -1,0 +1,40 @@
+#!/usr/bin/env rust-script
+//! ```cargo
+//! [dependencies]
+//! get_cyrup_ai = { path = ".." }
+//! tokio = { version = "1.0", features = ["full"] }
+//! anyhow = "1.0"
+//! ```
+
+use anyhow::Result;
+use get_cyrup_ai::package::{catalog, manager::PackageManager};
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    println!("🚀 Installing Cyrup development environment...");
+
+    // Detect the system package manager
+    let pkg_manager = PackageManager::detect()?;
+    println!("📦 Using package manager: {:?}", pkg_manager);
+    
+    // Install base development packages
+    println!("📚 Installing base packages...");
+    let base_recipe = pkg_manager.generate_recipe(&catalog::base_packages())?;
+    base_recipe.install().await?;
+
+    // Install development tools
+    println!("🛠️ Installing development tools...");
+    let dev_recipe = pkg_manager.generate_recipe(&catalog::development_packages())?;
+    dev_recipe.install().await?;
+
+    // Setup Python environment
+    println!("🐍 Setting up Python environment...");
+    catalog::setup_python_environment().await?;
+
+    // Setup Rust environment
+    println!("🦀 Setting up Rust environment...");
+    catalog::setup_rust_environment().await?;
+
+    println!("✨ Installation complete!");
+    Ok(())
+}

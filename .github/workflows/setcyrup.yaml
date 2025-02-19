@@ -1,0 +1,70 @@
+name: Build setcyrup binary
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    paths:
+      - 'src/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/setcyrup.yaml'
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build setcyrup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rust-src, rust-analyzer
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev
+
+      - name: Build setcyrup
+        run: |
+          cargo build --release
+          # Strip debug symbols to reduce binary size
+          strip target/release/setcyrup
+
+      - name: Test binary
+        run: |
+          ./target/release/setcyrup --version
+          ./target/release/setcyrup --help
+
+      - name: Copy to docs/assets
+        run: |
+          mkdir -p docs/assets
+          cp target/release/setcyrup docs/assets/
+          # Make binary executable
+          chmod +x docs/assets/setcyrup
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add docs/assets/setcyrup
+          git commit -m "Update setcyrup binary for $(git rev-parse --short HEAD)" || echo "No changes to commit"
+          git push

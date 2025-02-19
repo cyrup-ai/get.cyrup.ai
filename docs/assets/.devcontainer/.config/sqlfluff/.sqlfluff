@@ -1,0 +1,22 @@
+[sqlfluff]
+dialect = postgres
+verbose = 0
+nocolor = False
+ignore = parsing
+
+[sqlfluff:rules]
+allow_scalar = True
+single_table_references = consistent
+unquoted_identifiers_policy = all
+
+[sqlfluff:rules:L010]
+capitalisation_policy = lower
+
+[sqlfluff:rules:L014]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L030]
+capitalisation_policy = upper
+
+[sqlfluff:rules:L040]
+capitalisation_policy = upper

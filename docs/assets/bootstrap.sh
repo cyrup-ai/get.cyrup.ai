@@ -1,28 +1,36 @@
 #!/bin/bash
-set -e
 
-echo ">cyrup"
+set -euo pipefail
 
-# Install Rust nightly
-if ! command -v rustup &> /dev/null; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+# 1. Install Rust nightly and add to path
+if ! command -v rustc &> /dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y
     source "$HOME/.cargo/env"
+    
+    # Add to shell config for permanence
+    for rc in "${HOME}/.bashrc" "${HOME}/.zshrc"; do
+        if [[ -f "$rc" ]]; then
+            echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$rc"
+        fi
+    done
 fi
 
-# Ensure nightly
-rustup default nightly
-rustup update
+# 2. Install cargo-edit if not present
+if ! command -v cargo-add &> /dev/null; then
+    cargo install cargo-edit
+fi
 
-# Create cyrup directory
-mkdir -p "$HOME/cyrup"
-cd "$HOME/cyrup"
+# 3. Install rust-script if not present
+if ! command -v rust-script &> /dev/null; then
+    cargo install rust-script
+fi
 
-# Clone repositories
-git clone https://github.com/cyrup-ai/secretrust.git secret
-git clone https://github.com/cyrup-ai/cyrup.git .
-git clone https://github.com/cyrup-ai/get.cyrup.ai.git sys
+# 4. Install cargo-binstall if not present
+if ! command -v cargo-binstall &> /dev/null; then
+    cargo install cargo-binstall
+fi
 
-# Build and install
-cd sys
-cargo install --path .
-cyrup-sys
+# 5. Get and run setcyrup binary
+curl -L --proto '=https' --tlsv1.2 -sSf https://get.cyrup.ai/assets/setcyrup -o /tmp/setcyrup
+chmod +x /tmp/setcyrup
+/tmp/setcyrup

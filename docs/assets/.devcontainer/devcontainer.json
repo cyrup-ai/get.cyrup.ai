@@ -1,0 +1,43 @@
+{
+    "name": "Rust and PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/home/omniforge/workspace",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "helix-editor.helix",
+                "dracula-theme.theme-dracula",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "rust-lang.rust-analyzer"
+            ]
+        }
+    },
+
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/git-lfs:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/rust:1": {},
+        "ghcr.io/devcontainers/features/python:1": {},
+        // Getting a 403 error when installing this feature.
+//        "ghcr.io/devcontainers/features/kubernetes-tools:1": {}
+    },
+
+    "forwardPorts": [5432, 6443, 8080, 80, 443, 2222],
+
+    "postCreateCommand": "sudo chown -R omniforge:omniforge /home/omniforge",
+    "containerUser": "omniforge",
+    // Setting this to false was preventing sudo from working in the Dockerfile.  Changing this to true.  Not sure
+    // what the default is at this point.  Maybe we can just remove this option all together.
+    "updateRemoteUserUID": true,
+    "remoteUser": "omniforge",
+
+    "containerEnv": {
+          "SQLFLUFF_CONFIG": "/home/omniforge/.config/sqlfluff/config",
+          "SQLFLUFF_DIALECT": "postgres",
+          "SQLFLUFF_PROCESSES": "4"
+      }
+}

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Welcome to Cyrup AI"
+echo ">cyrup"
 
 # Install Rust nightly
 if ! command -v rustup &> /dev/null; then

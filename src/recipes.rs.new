@@ -1,0 +1,106 @@
+use std::collections::HashMap;
+use anyhow::Result;
+use crate::package_manager::{PackageManager, get_package_manager};
+
+pub struct Package {
+    name: String,
+    manager_type: String,
+}
+
+impl Package {
+    pub fn new(name: &str, manager_type: &str) -> Self {
+        Self {
+            name: name.to_string(),
+            manager_type: manager_type.to_string(),
+        }
+    }
+
+    pub async fn install_or_upgrade(&self, force_upgrade: bool) -> Result<()> {
+        let manager = get_package_manager(&self.manager_type);
+        manager.install_or_upgrade(&self.name, force_upgrade)
+    }
+}
+
+pub struct Recipe {
+    pub packages: HashMap<String, Vec<Package>>,
+}
+
+impl Recipe {
+    pub fn new() -> Self {
+        let mut packages = HashMap::new();
+        
+        // Ubuntu packages
+        packages.insert("ubuntu".to_string(), vec![
+            Package::new("zsh", "apt"),
+            Package::new("tmux", "apt"),
+            Package::new("htop", "apt"),
+        ]);
+
+        // Amazon Linux packages
+        packages.insert("amazon".to_string(), vec![
+            Package::new("zsh", "yum"),
+            Package::new("tmux", "yum"),
+            Package::new("htop", "yum"),
+        ]);
+
+        // macOS packages
+        packages.insert("macos".to_string(), vec![
+            Package::new("zsh", "brew"),
+            Package::new("tmux", "brew"),
+            Package::new("htop", "brew"),
+        ]);
+
+        Self { packages }
+    }
+
+    pub fn get_packages(&self, platform: &str) -> Option<&Vec<Package>> {
+        self.packages.get(platform)
+    }
+
+    pub async fn install_all(&self, platform: &str, force_upgrade: bool) -> Result<()> {
+        if let Some(packages) = self.get_packages(platform) {
+            for package in packages {
+                package.install_or_upgrade(force_upgrade).await?;
+            }
+        }
+        Ok(())
+    }
+}
+
+pub struct DevToolsRecipe {
+    pub packages: HashMap<String, Vec<Package>>,
+}
+
+impl DevToolsRecipe {
+    pub fn new() -> Self {
+        let mut packages = HashMap::new();
+        
+        // Common Rust tools for all platforms
+        let rust_tools = vec![
+            Package::new("ripgrep", "cargo"),
+            Package::new("fd-find", "cargo"),
+            Package::new("bat", "cargo"),
+            Package::new("exa", "cargo"),
+            Package::new("tokei", "cargo"),
+        ];
+
+        packages.insert("ubuntu".to_string(), rust_tools.clone());
+        packages.insert("amazon".to_string(), rust_tools.clone());
+        packages.insert("macos".to_string(), rust_tools);
+
+        Self { packages }
+    }
+
+    pub fn get_packages(&self, platform: &str) -> Option<&Vec<Package>> {
+        self.packages.get(platform)
+    }
+
+    pub async fn install_all(&self, platform: &str, force_upgrade: bool) -> Result<()> {
+        if let Some(packages) = self.get_packages(platform) {
+            for package in packages {
+                package.install_or_upgrade(force_upgrade).await?;
+            }
+        }
+        Ok(())
+    }
+}

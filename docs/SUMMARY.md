@@ -1,4 +1,6 @@
-# Summary
+<img src="assets/background/cyrup_automl.png" alt="Cyrup AutoML" style="max-width: 800px;">
+
+# `cyrup`
 
 [Introduction](./introduction.md)
 

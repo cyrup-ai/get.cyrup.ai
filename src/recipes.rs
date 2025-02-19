@@ -1,79 +1,57 @@
-use anyhow::{anyhow, Result};
-use std::process::Command;
+use std::collections::HashMap;
 
 pub struct Recipe {
-    name: &'static str,
-    packages: Packages,
-    required: bool,
+    pub packages: HashMap<String, Vec<String>>,
 }
 
-struct Packages {
-    ubuntu: Vec<&'static str>,
-    amazon: Vec<&'static str>,
-    macos: Vec<&'static str>,
-}
-
-const RECIPES: &[Recipe] = &[
-    Recipe {
-        name: "system-core",
-        packages: Packages {
-            ubuntu: vec!["build-essential", "curl", "git"],
-            amazon: vec!["gcc", "gcc-c++", "make", "curl", "git"],
-            macos: vec!["curl", "git"],
-        },
-        required: true,
-    },
-    Recipe {
-        name: "shell-tools",
-        packages: Packages {
-            ubuntu: vec!["zsh", "tmux", "htop"],
-            amazon: vec!["zsh", "tmux", "htop"],
-            macos: vec!["zsh", "tmux", "htop"],
-        },
-        required: true,
-    },
-    Recipe {
-        name: "dev-tools",
-        packages: Packages {
-            ubuntu: vec!["ripgrep", "fd-find"],
-            amazon: vec!["ripgrep"],
-            macos: vec!["ripgrep", "fd"],
-        },
-        required: true,
-    },
-];
-
-pub fn install_all(os: &str) -> Result<()> {
-    for recipe in RECIPES {
-        println!("📦 Installing {}", recipe.name);
-        let packages = match os {
-            "ubuntu" => &recipe.packages.ubuntu,
-            "amazon" => &recipe.packages.amazon,
-            "macos" => &recipe.packages.macos,
-            _ => return Err(anyhow!("Unsupported OS: {}", os)),
-        };
-
-        match os {
-            "ubuntu" => {
-                Command::new("sudo")
-                    .args(["apt-get", "install", "-y"])
-                    .args(packages)
-                    .status()?;
-            }
-            "amazon" => {
-                Command::new("sudo")
-                    .args(["yum", "install", "-y"])
-                    .args(packages)
-                    .status()?;
-            }
-            "macos" => {
-                Command::new("brew")
-                    .args(["install"])
-                    .args(packages)
-                    .status()?;
-            }
-            _ => unreachable!(),
-        }
+impl Recipe {
+    pub fn new() -> Self {
+        let mut packages = HashMap::new();
+        packages.insert("ubuntu".to_string(), vec![
+            "zsh".to_string(),
+            "tmux".to_string(),
+            "htop".to_string(),
+        ]);
+        packages.insert("amazon".to_string(), vec![
+            "zsh".to_string(),
+            "tmux".to_string(),
+            "htop".to_string(),
+        ]);
+        packages.insert("macos".to_string(), vec![
+            "zsh".to_string(),
+            "tmux".to_string(),
+            "htop".to_string(),
+        ]);
+        Self { packages }
     }
-    Ok(())
+
+    pub fn get_packages(&self, platform: &str) -> Option<&Vec<String>> {
+        self.packages.get(platform)
+    }
+}
+
+pub struct DevToolsRecipe {
+    pub packages: HashMap<String, Vec<String>>,
+}
+
+impl DevToolsRecipe {
+    pub fn new() -> Self {
+        let mut packages = HashMap::new();
+        packages.insert("ubuntu".to_string(), vec![
+            "ripgrep".to_string(),
+            "fd-find".to_string(),
+        ]);
+        packages.insert("amazon".to_string(), vec![
+            "ripgrep".to_string(),
+        ]);
+        packages.insert("macos".to_string(), vec![
+            "ripgrep".to_string(),
+            "fd".to_string(),
+        ]);
+        Self { packages }
+    }
+
+    pub fn get_packages(&self, platform: &str) -> Option<&Vec<String>> {
+        self.packages.get(platform)
+    }
 }

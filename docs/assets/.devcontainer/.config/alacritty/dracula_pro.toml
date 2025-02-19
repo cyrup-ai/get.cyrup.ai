@@ -1,0 +1,67 @@
+# alacritty-examples.toml Dracula Pro configuration by urrick hunt
+# on macos or linux insert this code snippet in beginning of your alacritty.toml before [env]
+
+import = [
+    "~/.config/alacritty/themes/dracula-pro.toml"
+]
+
+
+# example macos or linux alacritty.toml integration
+
+live_config_reload = true
+colors.draw_bold_text_with_bright_colors = true
+
+import = [
+    "~/.config/alacritty/themes/dracula-pro.toml"
+]
+
+[env]
+TERM = "alacritty"
+
+
+# on windows insert this code snippet in beginning of your alacritty.toml before [env]
+# adjust your user name or path if different `%APPDATA%\alacritty\themes`
+# but it must be an absolute path with double back slashes for this to work correctly
+
+import = [
+    "C:\\Users\\admin\\AppData\\Roaming\\alacritty\\themes\\dracula-pro.toml"
+]
+
+
+# example windows alacritty.toml integration
+
+live_config_reload = true
+working_directory = "C:\\Users\\admin"
+colors.draw_bold_text_with_bright_colors = true
+
+import = [
+    "C:\\Users\\admin\\AppData\\Roaming\\alacritty\\themes\\dracula-pro.toml"
+]
+
+[env]
+TERM = "alacritty"
+
+
+# change theme to use other dracula pro variations by using a different dracula-pro.toml
+
+import = [
+    "~/.config/alacritty/themes/dracula-pro-blade.toml"
+]
+
+# or on windows
+
+import = [
+    "C:\\Users\\admin\\AppData\\Roaming\\alacritty\\themes\\dracula-pro-alucard.toml"
+]
+
+
+# in order to get the most out of alacritty its best to declare it as your term in your alacritty.toml
+
+[env]
+TERM = "alacritty"
+
+# most package managers on linux and macos will install terminfo for alacritty correctly 
+# to check use the `toe` command and you should see in your list:
+
+# alacritty       alacritty terminal emulator
+# alacritty-direct        alacritty with direct color indexing

@@ -1,0 +1,17 @@
+theme = "dracula_pro"
+indent-guides.render = true
+auto-format = true
+
+[editor]
+auto-pairs = true
+line-number = "relative"
+mouse = true
+shell = ["zsh", "-c"]
+
+[editor.lsp]
+display-messages = true
+
+[keys.normal]
+space.space = "file_picker"
+space.w = ":w"
+space.q = ":q"

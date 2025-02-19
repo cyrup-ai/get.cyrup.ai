@@ -1,0 +1,169 @@
+# Compiled files
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Rust specific
+/target/
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Dependency directories
+/node_modules/
+/vendor/
+
+# Log files
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build output
+/dist/
+/build/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Documentation
+/doc/
+
+# Test coverage
+/coverage/
+
+# Miscellaneous
+*.cache
+*.sqlite
+*.sqlite3
+*.db
+*.neon
+
+third-party/**/
+
+# Models
+/models/*
+!/models/index.toml
+
+# Jail directory
+/jail/*
+!/jail/*/
+/jail/*/*
+!/jail/*/*/
+
+/bin/*
+!/bin/.gitkeep
+
+# Exclude Obsidian config files
+knowledge/.obsidian
+knowledge/.obsidian/*
+
+notebooks/leads
+notebooks/leads/*
+notebooks/leads/**/*
+
+scripts/vulture/*.pub
+
+iso/*
+iso/*/**
+
+notebooks/leads/**/*
+target/
+target/*
+target/*/**
+spider_storage/
+spider_storage/*
+spider_storage/*/**
+test_storage/
+test_storage/*
+test_storage/*/**
+
+vendors/
+vendors/**/*
+**/vendors/**/*
+**/vendors/*
+
+vendor/
+vendor/**/*
+**/vendor/*
+**/vendor/*
+
+test_output/
+test_output/**/*
+**/test_output/**/*
+test_crawl/
+test_crawl/**/*
+**/test_crawl/**/*
+
+ramdisk/
+ramdisk/**/*
+**/*ramdisk/**/*
+ramdisk/*
+ramdisk/*/**
+**/*ramdisk/*
+**/*ramdisk/*/**
+
+.env
+.ropeproject/
+.ropeproject/**/*
+.ropeproject/*
+.ropeproject/*/**
+.vscode/
+.vscode/**/*
+.vscode/**/**/*
+
+# Ignore all files in the 'data' directory
+data/
+data/*
+data/**/*
+
+# Ignore all files in the 'models' directory
+models/
+models/*
+models/**/*
+
+.modal
+
+# History files
+*.history.*
+
+# PyO3 and Cython build artifacts
+*.so
+*.pyd
+*.dll
+*.dylib
+*.cpython-*.so
+*.cpython-*.pyd
+*.abi3.so
+build/
+*.egg-info/
+dist/
+__pycache__/
+*.py[cod]
+*.c
+*.cpp
+*.html
+!src/**/*.c
+!src/**/*.cpp

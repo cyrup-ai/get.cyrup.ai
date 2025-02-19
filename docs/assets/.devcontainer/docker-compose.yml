@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            args:
+                # Generate a unique hostname based on project path and timestamp
+                CONTAINER_HOSTNAME: ${CONTAINER_HOSTNAME:-$(bash generate-hostname.sh)}
+        container_name: omni-${USER:-dev}
+        volumes:
+            - type: bind
+              source: ${LOCAL_WORKSPACE_FOLDER:-${PWD}/..}
+              target: /home/omniforge/workspace
+            - type: bind
+              source: ${HOME}/.kube
+              target: /home/omniforge/.kube
+              consistency: cached
+        environment:
+            - CONTAINER_HOSTNAME=${CONTAINER_HOSTNAME:-omni}
+            - RUST_LOG=info
+            - PYTHONUNBUFFERED=1
+            - CARGO_NET_GIT_FETCH_WITH_CLI=true
+            - HOME=/home/omniforge
+            - USER=omniforge
+        command: sleep infinity
+        network_mode: host # Important for Tailscale to work properly
+        security_opt:
+            - no-new-privileges:false
+        ports:
+            - "5432:5432" # PostgreSQL
+            - "6443:6443" # Kubernetes API
+            - "8080:8080" # Common web port
+            - "80:80" # HTTP
+            - "443:443" # HTTPS
+            - "2222:2222" # SSH
+            - "9090:9090" # Prometheus
+            - "3100:3100" # Grafana Loki
+            - "9093:9093" # Alertmanager
+            - "9091:9091" # Pushgateway
+            - "4317:4317" # OpenTelemetry gRPC
+            - "4318:4318" # OpenTelemetry HTTP
+        user: omniforge
+
+volumes:
+    postgres-data:
