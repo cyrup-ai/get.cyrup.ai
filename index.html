@@ -159,7 +159,9 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="install-cyrup-ai"><a class="header" href="#install-cyrup-ai">Install Cyrup AI</a></h1>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Cyrup AI is a powerful AI system that can be installed with a single command.</p>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <pre><code class="language-bash">curl -fsSL https://get.cyrup.ai/assets/bootstrap.sh | bash
 </code></pre>
 <p>That's it! One line, no options, no configuration needed.</p>
@@ -169,7 +171,15 @@
 <li>Amazon Linux</li>
 <li>macOS</li>
 </ul>
-<p>Automatic GPU detection included.</p>
+<h2 id="what-it-does"><a class="header" href="#what-it-does">What It Does</a></h2>
+<p>The bootstrap script will:</p>
+<ol>
+<li>Install Rust nightly if not present</li>
+<li>Create necessary directories</li>
+<li>Clone required repositories</li>
+<li>Build and install the system</li>
+<li>Automatically detect and configure GPU support</li>
+</ol>
 
                     </main>
 
