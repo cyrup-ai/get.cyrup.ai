@@ -1,0 +1,45 @@
+[book]
+name = "Cyrup AI Documentation"
+authors = ["Cyrup AI"]
+description = "Documentation for the Cyrup AI development environment installer"
+language = "en"
+multilingual = false
+src = "src"
+
+[rust]
+edition = "2021"
+
+[output.html]
+git-repository-url = "https://github.com/cyrup-ai/cyrup"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/cyrup-ai/cyrup/edit/main/docs/{path}"
+site-url = "/cyrup/"
+cname = "docs.cyrup.ai"
+default-theme = "light"
+preferred-dark-theme = "navy"
+
+# Enable search
+[output.html.search]
+enable = true
+limit-results = 30
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+# Enable copy code buttons
+[output.html.playground]
+editable = true
+copy-js = true
+line-numbers = true
+
+# Enable math equations
+[preprocessor.katex]
+after = ["links"]
+
+# Enable mermaid diagrams
+[preprocessor.mermaid]
+command = "mdbook-mermaid"

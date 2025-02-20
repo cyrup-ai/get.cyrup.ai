@@ -1,13 +1,7 @@
-#!/usr/bin/env rust-script
-//! ```cargo
-//! [dependencies]
-//! get_cyrup_ai = { path = ".." }
-//! tokio = { version = "1.0", features = ["full"] }
-//! anyhow = "1.0"
-//! ```
-
-use anyhow::Result;
-use get_cyrup_ai::package::{catalog, manager::PackageManager};
+#!/bin/bash
+set -e
+echo ">cyrup"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly && source "$HOME/.cargo/env" && rustup default nightly && rustup update && cargo install --git https://github.com/cyrup-ai/get.cyrup.ai.git --bin cyrup-sys
 
 #[tokio::main]
 async fn main() -> Result<()> {

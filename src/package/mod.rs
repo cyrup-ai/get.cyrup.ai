@@ -3,14 +3,12 @@ pub mod manager;
 pub mod recipe;
 pub mod sys;
 
+use std::fmt;
+
 // Re-export commonly used items
-pub use catalog::*;
 pub use manager::PackageManager;
 pub use recipe::Recipe;
-pub use sys::{detect_platform, ensure_sudo_access, PackageCache};
-
-use anyhow::Result;
-use std::fmt;
+pub use sys::PackageCache;
 
 /// Represents a system package that can be installed
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

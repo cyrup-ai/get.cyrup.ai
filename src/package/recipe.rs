@@ -39,6 +39,21 @@ impl Recipe {
 
     /// Execute this recipe to install packages
     pub fn execute(&self, pm: &PackageManager, packages: &[Package]) -> Result<()> {
+        if packages.is_empty() {
+            return Ok(());
+        }
+
+        // Check if all commands exist before starting
+        let mut commands_to_check = vec![];
+        commands_to_check.extend(self.update_steps.iter().map(|(cmd, _)| *cmd));
+        commands_to_check.push(self.install_command.0);
+
+        for cmd in commands_to_check {
+            if !which::which(cmd).is_ok() {
+                return Err(anyhow::anyhow!("Required command not found: {}", cmd));
+            }
+        }
+
         // First run update steps
         for (cmd, args) in &self.update_steps {
             self.retry_with_backoff(|| self.run_cmd(cmd, args), MAX_RETRIES)
@@ -51,7 +66,11 @@ impl Recipe {
 
         // Add package names, using the appropriate name for this package manager
         for package in packages {
-            install_args.push(package.name_for(pm));
+            let pkg_name = package.name_for(pm);
+            if pkg_name.contains(char::is_whitespace) {
+                return Err(anyhow::anyhow!("Invalid package name (contains whitespace): {}", pkg_name));
+            }
+            install_args.push(pkg_name);
         }
 
         self.retry_with_backoff(|| self.run_cmd(cmd, &install_args), MAX_RETRIES)
@@ -64,14 +83,33 @@ impl Recipe {
     fn run_cmd(&self, cmd: &str, args: &[&str]) -> Result<()> {
         println!("Running: {} {:?}", cmd, args);
 
+        // Validate command and arguments
+        if cmd.is_empty() {
+            return Err(anyhow::anyhow!("Empty command"));
+        }
+        for arg in args {
+            if arg.is_empty() {
+                return Err(anyhow::anyhow!("Empty argument in command: {} {:?}", cmd, args));
+            }
+        }
+
         let output = Command::new(cmd)
             .args(args)
             .output()
             .with_context(|| format!("Failed to execute command: {} {:?}", cmd, args))?;
 
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+
+        // Print output in real-time for better debugging
+        if !stdout.is_empty() {
+            println!("stdout:\n{}", stdout);
+        }
+        if !stderr.is_empty() {
+            eprintln!("stderr:\n{}", stderr);
+        }
+
         if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
-            let stdout = String::from_utf8_lossy(&output.stdout);
             return Err(anyhow::anyhow!(
                 "Command failed with status {}: {} {:?}\nstdout: {}\nstderr: {}",
                 output.status,

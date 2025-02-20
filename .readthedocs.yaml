@@ -1,9 +1,26 @@
+# Read the Docs configuration file for mdBook
 version: 2
 
 build:
-  os: ubuntu-lts-latest
+  os: ubuntu-22.04  # LTS version for stability
   tools:
-    rust: latest
+    rust: "1.75"  # Specify version for reproducibility
+    python: "3.11"  # Required by Read the Docs
+
+  jobs:
+    pre_build:
+      # Install mdbook before building
+      - cargo install mdbook --vers "^0.4.36"
+      # Create output directory if it doesn't exist
+      - mkdir -p ${READTHEDOCS_OUTPUT:=_readthedocs/html}
+
+    post_build:
+      # Copy static assets
+      - cp -r docs/assets ${READTHEDOCS_OUTPUT:=_readthedocs/html}/
+
   commands:
-    - cargo install mdbook
-    - cd docs && mdbook build --dest-dir $READTHEDOCS_OUTPUT/html
+    # Build the documentation
+    - cd docs && mdbook build --dest-dir ${READTHEDOCS_OUTPUT:=_readthedocs/html}
+
+sphinx:
+  configuration: docs/conf.py  # Only used for API indexing, not for actual builds

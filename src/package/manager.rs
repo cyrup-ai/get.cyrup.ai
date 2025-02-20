@@ -20,7 +20,10 @@ impl PackageManager {
     /// Detect the system's package manager
     pub fn detect() -> Result<Self> {
         if cfg!(target_os = "macos") {
-            return Ok(PackageManager::Brew);
+            if which("brew").is_ok() {
+                return Ok(PackageManager::Brew);
+            }
+            return Err(anyhow!("Homebrew not found. Please install it first: https://brew.sh"));
         }
 
         if which("apt-get").is_ok() {
@@ -28,7 +31,7 @@ impl PackageManager {
         } else if which("yum").is_ok() {
             Ok(PackageManager::Yum)
         } else {
-            Err(anyhow!("No supported package manager found"))
+            Err(anyhow!("No supported package manager found. Please install apt-get or yum."))
         }
     }
 
@@ -55,8 +58,17 @@ impl PackageManager {
 
     /// Install packages using this package manager
     pub fn install(&self, packages: &[Package]) -> Result<()> {
-        let recipe = self.recipe();
-        recipe.execute(self, packages)
+        if packages.is_empty() {
+            return Ok(());
+        }
+
+        // Split packages into batches of 10 to avoid command line length limits
+        const BATCH_SIZE: usize = 10;
+        for chunk in packages.chunks(BATCH_SIZE) {
+            let recipe = self.recipe();
+            recipe.execute(self, chunk)?;
+        }
+        Ok(())
     }
 }
 

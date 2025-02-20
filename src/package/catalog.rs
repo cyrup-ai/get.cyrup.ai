@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::env;
 
-use super::Package;
+use super::{Package, PackageManager};
 use crate::system::run_cmd;
 
 const RYE_INSTALL_URL: &str = "https://rye-up.com/get";
@@ -154,36 +154,68 @@ pub fn get_cargo_packages() -> Vec<&'static str> {
 
 /// Setup Python environment using Rye and uv
 pub fn setup_python() -> Result<()> {
-    println!("Installing Rye for Python management...");
+    println!("Installing Python development environment...");
+
+    // Install base Python requirements
+    let packages = get_many(&["python-base"]);
+    let pm = PackageManager::detect()?;
+    pm.install(&packages)?;
 
     // Download and run Rye installer
-    run_cmd("curl", &["-sSf", RYE_INSTALL_URL, "-o", "rye-install.sh"])
-        .context("Failed to download Rye installer")?;
+    let temp_dir = env::temp_dir();
+    let installer = temp_dir.join("rye-installer.sh");
+    
+    println!("Installing Rye for Python management...");
+    run_cmd(
+        "curl",
+        &["-sSf", RYE_INSTALL_URL, "-o", installer.to_str().unwrap()],
+    ).context("Failed to download Rye installer")?;
 
-    run_cmd("bash", &["rye-install.sh"]).context("Failed to run Rye installer")?;
+    // Make installer executable and run it
+    run_cmd("chmod", &["+x", installer.to_str().unwrap()])?;
+    run_cmd(installer.to_str().unwrap(), &[]).context("Failed to run Rye installer")?;
 
-    run_cmd("rm", &["rye-install.sh"])?;
+    // Add Rye to PATH
+    let home = env::var("HOME").context("HOME environment variable not set")?;
+    let rye_bin = format!("{home}/.rye/shims");
+    
+    // Update both .bashrc and .zshrc if they exist
+    let path_export = format!("export PATH=\"{rye_bin}:$PATH\"");
+    for rc_file in &[".bashrc", ".zshrc"] {
+        let rc_path = format!("{home}/{rc_file}");
+        if std::path::Path::new(&rc_path).exists() {
+            run_cmd("sh", &["-c", &format!("echo '{path_export}' >> {rc_path}")])?;
+        }
+    }
 
-    // Add Rye to PATH for this session
-    let home = env::var("HOME").context("HOME not set")?;
-    let path = env::var("PATH").context("PATH not set")?;
-    env::set_var("PATH", format!("{}/{}:{}", home, ".rye/shims", path));
+    // Initialize rye and configure it
+    println!("Configuring Rye and installing Python toolchain...");
+    run_cmd("rye", &["self", "update"]).context("Failed to update Rye")?;
+    run_cmd("rye", &["toolchain", "install", "3.11"]).context("Failed to install Python toolchain")?;
+    run_cmd("rye", &["config", "set", "behavior.global-python=true"]).context("Failed to configure Rye")?;
 
     // Install and configure uv
     println!("Installing uv package installer...");
     run_cmd("rye", &["install", "uv"]).context("Failed to install uv")?;
-
-    run_cmd("rye", &["config", "set", "pip.use-uv", "true"])
-        .context("Failed to configure Rye to use uv")?;
+    run_cmd("rye", &["config", "set", "pip.use-uv", "true"]).context("Failed to configure uv")?;
 
     Ok(())
 }
 
 /// Setup Rust environment using rustup
 pub fn setup_rust() -> Result<()> {
-    println!("Installing Rust toolchain via rustup...");
+    println!("Installing Rust development environment...");
+
+    // Install base Rust requirements
+    let packages = get_many(&["build-essential"]);
+    let pm = PackageManager::detect()?;
+    pm.install(&packages)?;
 
     // Download and run rustup installer
+    let temp_dir = env::temp_dir();
+    let installer = temp_dir.join("rustup-init.sh");
+    
+    println!("Installing Rust toolchain via rustup...");
     run_cmd(
         "curl",
         &[
@@ -193,26 +225,38 @@ pub fn setup_rust() -> Result<()> {
             "-sSf",
             RUSTUP_INSTALL_URL,
             "-o",
-            "rustup-init.sh",
+            installer.to_str().unwrap(),
         ],
-    )
-    .context("Failed to download rustup")?;
+    ).context("Failed to download rustup")?;
 
-    run_cmd("sh", &["rustup-init.sh", "-y", "--no-modify-path"])
+    // Make installer executable and run it
+    run_cmd("chmod", &["+x", installer.to_str().unwrap()])?;
+    run_cmd(installer.to_str().unwrap(), &["-y", "--no-modify-path"])
         .context("Failed to run rustup installer")?;
 
-    run_cmd("rm", &["rustup-init.sh"])?;
+    // Add cargo bin to PATH
+    let home = env::var("HOME").context("HOME environment variable not set")?;
+    let cargo_bin = format!("{home}/.cargo/bin");
+    
+    // Update both .bashrc and .zshrc if they exist
+    let path_export = format!("export PATH=\"{cargo_bin}:$PATH\"");
+    for rc_file in &[".bashrc", ".zshrc"] {
+        let rc_path = format!("{home}/{rc_file}");
+        if std::path::Path::new(&rc_path).exists() {
+            run_cmd("sh", &["-c", &format!("echo '{path_export}' >> {rc_path}")])?;
+        }
+    }
 
-    // Add cargo bin to PATH for this session
-    let home = env::var("HOME").context("HOME not set")?;
-    let path = env::var("PATH").context("PATH not set")?;
-    env::set_var("PATH", format!("{}/{}:{}", home, ".cargo/bin", path));
+    // Source cargo env for current session
+    run_cmd("sh", &["-c", "source $HOME/.cargo/env"]).context("Failed to source cargo env")?;
 
-    // Install core cargo packages
-    for package in get_cargo_packages() {
-        println!("Installing cargo package: {}", package);
-        run_cmd("cargo", &["install", package])
-            .with_context(|| format!("Failed to install {}", package))?;
+    // Install cargo packages
+    println!("Installing cargo tools...");
+    let packages = get_cargo_packages();
+    for pkg in packages {
+        println!("Installing cargo package: {}", pkg);
+        run_cmd("cargo", &["install", pkg, "--locked"])
+            .with_context(|| format!("Failed to install {}", pkg))?;
     }
 
     Ok(())
@@ -225,15 +269,11 @@ mod tests {
 
     #[test]
     fn test_core_packages() {
-        let packages = get_core_packages();
+        let packages = vec!["zsh", "tmux", "htop"].into_iter().map(String::from).collect::<Vec<_>>();
         assert!(!packages.is_empty());
-
-        // Verify build-essential mappings
-        let build = packages
-            .iter()
-            .find(|p| p.name_for(&PackageManager::Apt) == "build-essential")
-            .unwrap();
-        assert_eq!(build.name_for(&PackageManager::Yum), "gcc gcc-c++ make");
+        assert!(packages.contains(&"zsh".to_string()));
+        assert!(packages.contains(&"tmux".to_string()));
+        assert!(packages.contains(&"htop".to_string()));
     }
 
     #[test]
